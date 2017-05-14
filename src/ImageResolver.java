@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
 public class ImageResolver {
 	
 	/**
@@ -10,25 +12,26 @@ public class ImageResolver {
 	 * param imagePath
 	 * param outPutPath
 	 */
-	public void transform(BufferedImage image, String outPutPath){
+	public void transform(BufferedImage image, String outPutPath) throws IOException{
+		
+		int pixel;
 		int height = image.getHeight();
 		int width = image.getWidth();
-		char[] temp = new char[1];;
-		int pixel;
+		FileWriter writer = new FileWriter(new File(outPutPath), true);
+		char[] temp = new char[width];;
+		
 		for (int i = 0; i < height; i++) {  
             for (int j = 0; j < width; j++) {  
                 try {
-					pixel = image.getRGB(i, j);
+					pixel = image.getRGB(j, i);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					continue;
 				}
-                temp = new char[width+1];
                 temp[j] =  getAscii((pixel & 0xff0000) >> 16, (pixel & 0xff00) >> 8, (pixel & 0xff));
-              //System.out.println(temp[j]);
             }  
-            outPut(temp, outPutPath);
-            //System.out.println(i);
+            outPut(temp, writer);
         } 
+		writer.close();
 	}
 	
 	/**
@@ -36,41 +39,38 @@ public class ImageResolver {
 	 * param image
 	 */
 	public char getAscii(int red, int green, int blue){
-		System.out.println((int)(0.2126 * red + 0.7152 * green + 0.0722 * blue));
-		System.out.println((char)((int)(0.2126 * red + 0.7152 * green + 0.0722 * blue)));
-		return (char)(int)(0.2126 * red + 0.7152 * green + 0.0722 * blue);
+//		char rs = (char)((int)(0.2126 * red + 0.7152 * green + 0.0722 * blue)%94+33);
+//		System.out.println((((int)(0.2126 * red + 0.7152 * green + 0.0722 * blue)*94/256)%94+33));
+//		System.out.println((char)(((int)(0.2126 * red + 0.7152 * green + 0.0722 * blue)*94/256)%94+33));
+		//char rs = (char)(((int)(0.2126 * red + 0.7152 * green + 0.0722 * blue)*94/256)%94+33);
+		return (char)(((int)(0.2126 * red + 0.7152 * green + 0.0722 * blue)*94/256)%94+33);
 	}
 	
 	/**
 	 * 输出到txt文件
 	 * param char[] 
-	 * param path
+	 * param writer 
 	 */
-	public void outPut(char[] data, String outPutPath){
+	public void outPut(char[] data, FileWriter writer){
 		try {
-			FileWriter writer = new FileWriter(new File(outPutPath), true);
-			//System.out.println(String.valueOf(data));
-			writer.write(String.valueOf(data));
+			writer.write(String.valueOf(data)+"\n");
 			writer.flush();
-			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 	}
 	public static void main(String[] args) {
-//		ImageResolver rs = new ImageResolver();
-//		try {
-//			rs.transform(ImageIO.read( new File("/Users/zhongbingyi/Desktop/23_2.jpg")), "/Users/zhongbingyi/Downloads/out.txt");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		for( int i = 0 ; i < 256 ; i++){
-			if((char)i == '!'){
-				System.out.println(i);
-			}
-			System.out.println((char)i);
+		ImageResolver rs = new ImageResolver();
+		try {
+			BufferedImage image = ImageIO.read( new File("/Users/zhongbingyi/Desktop/haha.jpg"));
+			BufferedImage tag = new BufferedImage(image.getWidth()*2, image.getHeight(),BufferedImage.TYPE_INT_RGB);
+		    tag.getGraphics().drawImage(image, 0, 0, image.getWidth()*2, image.getHeight(), null);
+			rs.transform(tag, "/Users/zhongbingyi/Downloads/out.txt");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
 			
 	}
 
