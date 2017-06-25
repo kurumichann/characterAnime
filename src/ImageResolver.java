@@ -53,7 +53,15 @@ public class ImageResolver {
 	 */
 	public void outPut(char[] data, FileWriter writer){
 		try {
-			writer.write(String.valueOf(data)+"\n");
+			StringBuffer buffer = new StringBuffer();
+			for( int i = 0 ; i < data.length ; i++){
+				if( i == data.length-1 ){
+					buffer.append("\n");
+					break;
+				}
+				buffer.append(data[i]).append(" ");
+			}
+			writer.write(buffer.toString());
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -63,10 +71,10 @@ public class ImageResolver {
 	public static void main(String[] args) {
 		ImageResolver rs = new ImageResolver();
 		try {
-			BufferedImage image = ImageIO.read( new File("/Users/zhongbingyi/Desktop/haha.jpg"));
-			BufferedImage tag = new BufferedImage(image.getWidth()*2, image.getHeight(),BufferedImage.TYPE_INT_RGB);
-		    tag.getGraphics().drawImage(image, 0, 0, image.getWidth()*2, image.getHeight(), null);
-			rs.transform(tag, "/Users/zhongbingyi/Downloads/out.txt");
+			BufferedImage image = ImageIO.read( new File("/Users/zhongbingyi/Desktop/aaa.jpg"));
+			//BufferedImage tag = new BufferedImage(image.getWidth()*2, image.getHeight(),BufferedImage.TYPE_INT_RGB);
+		    //tag.getGraphics().drawImage(image, 0, 0, image.getWidth()*2, image.getHeight(), null);
+			rs.transform(image, "/Users/zhongbingyi/Downloads/out.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

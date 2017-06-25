@@ -33,7 +33,7 @@ public class Panel implements ActionListener{
 		textArea.setEditable(false);
 		textArea.setPreferredSize(new Dimension(1200,720));
 		textArea.setBorder(BorderFactory.createLoweredBevelBorder());
-		Font x = new Font("Courier",Font.PLAIN,5);
+		Font x = new Font("Courier",Font.PLAIN,2);
 		textArea.setFont(x);
 		
 		con.setLayout(new BorderLayout());
@@ -68,9 +68,10 @@ public class Panel implements ActionListener{
 	            }
 	            textArea.setText(buffer.toString());
 	            System.out.println(buffer.toString());
-	            //buffer.setLength(0);
+	            Thread.sleep(1000);
 	        } 
 			reader.close();
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -78,7 +79,8 @@ public class Panel implements ActionListener{
 	}
 	
 	public static void main(String[] args) {
-		new Panel("/Users/zhongbingyi/Downloads/temp");
+		new Panel("/Users/zhongbingyi/Downloads/pixiv_download");
+		///Users/zhongbingyi/Downloads/temp
 	}
 
 	@Override
